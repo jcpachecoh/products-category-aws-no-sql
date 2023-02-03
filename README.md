@@ -33,8 +33,6 @@ Install dynamodb
 
 ```bash
 $ serverless dynamodb install
-$ serverless plugin install -n serverless-dynamodb-local
-$ serverless plugin install -n serverless-offline
 ```
 
 Create a .env file with following values
@@ -45,6 +43,12 @@ DYNAMODB_ENDPOINT = 'http://localhost:6000/shell'
 ```
 
 Confiure aws local
+
+```bash
+aws configure
+```
+
+follow instructions in the following link <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html">AWS configure</a>
 
 ## Running the app
 

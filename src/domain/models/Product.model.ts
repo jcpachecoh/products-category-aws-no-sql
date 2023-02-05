@@ -1,11 +1,9 @@
-import { Category } from './Category.model';
-
 export class Product {
   id: string;
   name: string;
   description?: string;
   images: string[];
-  category: Category;
+  category: string;
   price: number;
   createdDate?: string;
   updatedDate?: string;

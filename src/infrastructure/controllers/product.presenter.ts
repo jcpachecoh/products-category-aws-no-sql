@@ -11,7 +11,7 @@ export class ProductPresenter {
   @ApiProperty()
   images: string[];
   @ApiProperty()
-  category: Category;
+  category: string;
   @ApiProperty()
   createdDate?: string;
   @ApiProperty()

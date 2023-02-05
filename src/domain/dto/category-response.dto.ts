@@ -17,7 +17,7 @@ export class GetAllCategoriesResponseDto extends MessageResponse {
 }
 
 export class GetCategoryResponseDto extends MessageResponse {
-  data: GetItemOutput | Category[];
+  data: GetItemOutput | Category;
   count?: number;
   scannedCount?: number;
 }

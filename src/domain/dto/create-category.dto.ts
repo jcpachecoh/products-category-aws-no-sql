@@ -3,4 +3,5 @@ export class CreateCategoryDto {
   description?: string = '';
   image: string;
   createdDate: string;
+  updatedDate?: string;
 }

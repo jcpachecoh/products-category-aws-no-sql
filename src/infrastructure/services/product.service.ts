@@ -14,25 +14,42 @@ import {
   CreateProductResponseDto,
   DeleteProductResponseDto,
   GetAllProductsResponseDto,
+  GetCategoryResponseDto,
   GetProductResponseDto,
   UpdateProductResponseDto,
 } from '../../domain/dto';
-import { Product } from '../../domain/models';
-import { isEmpty } from 'lodash';
+import { Category, Product } from '../../domain/models';
+import { isEmpty, isNull, isString } from 'lodash';
 import { HttpResponse } from '../../domain/models/Response.model';
+import { CategoriesService } from './category.service';
 
 @Injectable()
 export class ProductsService implements ProductRepository {
   TABLE_NAME = 'ProductsTable';
 
-  constructor(private dbService: DatabaseService) {}
+  constructor(
+    private dbService: DatabaseService,
+    private categoriesService: CategoriesService,
+  ) {}
 
   async createProduct(
     createProductDto: CreateProductDto,
   ): Promise<CreateProductResponseDto | HttpResponse> {
     if (isEmpty(createProductDto.name)) {
-      throw new HttpException('Name can not be null', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Invalid name', HttpStatus.BAD_REQUEST);
     }
+    if (isNull(createProductDto.price) || isString(createProductDto.price)) {
+      throw new HttpException(`Invalid price`, HttpStatus.BAD_REQUEST);
+    }
+
+    //get category
+    const category: GetCategoryResponseDto =
+      await this.categoriesService.findOneCategory(createProductDto.category);
+
+    if (isEmpty((category.data as Category)?.id)) {
+      throw new HttpException('Invalid category', HttpStatus.BAD_REQUEST);
+    }
+
     const productObj: Product = {
       id: uuid(),
       createdDate: new Date().toISOString().toString(),
@@ -109,6 +126,7 @@ export class ProductsService implements ProductRepository {
     updateProductDto: UpdateProductDto,
   ): Promise<UpdateProductResponseDto> {
     try {
+      const updatedDate = new Date().toISOString();
       return {
         status: HttpStatus.OK,
         message: 'Updated!',
@@ -118,18 +136,20 @@ export class ProductsService implements ProductRepository {
             TableName: this.TABLE_NAME,
             Key: { id },
             UpdateExpression:
-              'set #variable1 = :x, #variable2 = :y, #variable3 = :z, #variable4 = :w',
+              'set #variable1 = :x, #variable2 = :y, #variable3 = :z, #variable4 = :w, #variable5 = :u',
             ExpressionAttributeNames: {
               '#variable1': 'name',
               '#variable2': 'description',
               '#variable3': 'images',
               '#variable4': 'price',
+              '#variable5': 'updatedDate',
             },
             ExpressionAttributeValues: {
               ':x': updateProductDto.name,
               ':y': updateProductDto.description,
               ':z': updateProductDto.images,
               ':w': updateProductDto.price,
+              ':u': updatedDate,
             },
           })
           .promise(),

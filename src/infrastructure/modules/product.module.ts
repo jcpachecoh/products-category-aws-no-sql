@@ -4,10 +4,11 @@ import { DbModule } from '../db/db.module';
 
 import { ProductsController } from '../controllers/product.controller';
 import { ProductsService } from '../services/product.service';
+import { CategoriesService } from '../services/category.service';
 
 @Module({
   imports: [DbModule],
   controllers: [ProductsController],
-  providers: [ProductsService, DatabaseService],
+  providers: [ProductsService, DatabaseService, CategoriesService],
 })
 export class ProductsModule {}

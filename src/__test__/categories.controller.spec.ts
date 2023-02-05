@@ -91,14 +91,12 @@ describe('Categorys Controller', () => {
     it('then user should get a success message and all categories when performing get category id', async () => {
       const result: GetCategoryResponseDto = {
         status: HttpStatus.OK,
-        data: [
-          {
-            name: 'new category',
-            description: 'test detailsaaaa',
-            image: 'image',
-            id: '84bae457-616a-4562-8d8a-7829984608d7',
-          },
-        ],
+        data: {
+          name: 'new category',
+          description: 'test detailsaaaa',
+          image: 'image',
+          id: '84bae457-616a-4562-8d8a-7829984608d7',
+        },
         count: 1,
         scannedCount: 1,
       };
@@ -130,6 +128,7 @@ describe('Categorys Controller', () => {
             image: '',
             description: 'variable2',
             name: 'new aaaa',
+            updatedDate: 'some date',
           },
         ),
       ).toBe(result);

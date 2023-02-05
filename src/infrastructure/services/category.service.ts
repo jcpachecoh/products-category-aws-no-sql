@@ -33,7 +33,7 @@ export class CategoriesService implements CategoryRepository {
     if (isEmpty(createCategoryDto.name)) {
       throw new HttpException('Name can not be null', HttpStatus.BAD_REQUEST);
     }
-    const productObj: Category = {
+    const categoryObj: Category = {
       id: uuid(),
       createdDate: new Date().toISOString(),
       ...createCategoryDto,
@@ -44,14 +44,14 @@ export class CategoriesService implements CategoryRepository {
         .connect()
         .put({
           TableName: this.TABLE_NAME,
-          Item: productObj,
+          Item: categoryObj,
         })
         .promise();
 
       return {
         status: HttpStatus.CREATED,
         message: `successfully record saved`,
-        data: productObj,
+        data: categoryObj,
       };
     } catch (err) {
       throw new InternalServerErrorException(err);
@@ -77,7 +77,13 @@ export class CategoriesService implements CategoryRepository {
         scannedCount,
       };
     } catch (e) {
-      throw new InternalServerErrorException(e);
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        data: [],
+        message: `${JSON.stringify(e)}`,
+        count: 0,
+        scannedCount: 0,
+      };
     }
   }
 
@@ -90,12 +96,12 @@ export class CategoriesService implements CategoryRepository {
           Key: { id },
         })
         .promise();
-      const product = response?.Item;
+      const category = response?.Item;
 
       return {
         status: HttpStatus.OK,
         message: 'Retrieved successfully!',
-        data: product,
+        data: category,
         count: 1,
         scannedCount: 1,
       };
@@ -109,6 +115,7 @@ export class CategoriesService implements CategoryRepository {
     updateCategoryto: UpdateCategoryDto,
   ): Promise<UpdateCategoryResponseDto> {
     try {
+      const updatedDate = new Date().toISOString();
       return {
         status: HttpStatus.OK,
         message: 'Updated!',
@@ -117,14 +124,17 @@ export class CategoriesService implements CategoryRepository {
           .update({
             TableName: this.TABLE_NAME,
             Key: { id },
-            UpdateExpression: 'set #variable1 = :x, #variable2 = :y',
+            UpdateExpression:
+              'set #variable1 = :x, #variable2 = :y, #variable3 = :z',
             ExpressionAttributeNames: {
               '#variable1': 'name',
               '#variable2': 'description',
+              '#variable3': 'updatedDate',
             },
             ExpressionAttributeValues: {
               ':x': updateCategoryto.name,
               ':y': updateCategoryto.description,
+              ':z': updatedDate,
             },
           })
           .promise(),

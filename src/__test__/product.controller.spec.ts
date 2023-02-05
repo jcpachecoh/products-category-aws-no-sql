@@ -13,21 +13,23 @@ import {
 } from '../domain/dto';
 import { DatabaseService } from '../infrastructure/db/db.service';
 import { HttpResponse } from '../domain/models/Response.model';
+import { CategoriesService } from '../../src/infrastructure/services/category.service';
 
 describe('Products Controller', () => {
   let productsController: ProductsController;
   let databaseService: DatabaseService;
   let productsService: ProductsService;
+  let categoriesService: CategoriesService;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [ProductsController],
-      providers: [ProductsService, DatabaseService],
+      providers: [ProductsService, DatabaseService, CategoriesService],
     }).compile();
 
     productsController = app.get<ProductsController>(ProductsController);
     databaseService = new DatabaseService();
-    productsService = new ProductsService(databaseService);
+    productsService = new ProductsService(databaseService, categoriesService);
     productsController = new ProductsController(productsService);
   });
 
@@ -37,11 +39,7 @@ describe('Products Controller', () => {
       description: 'test detailsaaaa',
       images: ['image1', 'image2'],
       price: 22,
-      category: {
-        name: 'category 1',
-        image: 'image1',
-        description: '',
-      },
+      category: 'ea5e2360-39c8-4f7a-b2e1-3d7108bcba41',
     };
 
     it('then should get an exception when user wants to create a product with empty name ', async () => {
@@ -72,6 +70,55 @@ describe('Products Controller', () => {
         .mockImplementationOnce(() => Promise.resolve(result));
       expect(await productsController.createProduct(product)).toBe(result);
     });
+    it('then should get an error messages when user wants to create a product and name is null', async () => {
+      const result: CreateProductResponseDto = {
+        status: HttpStatus.BAD_GATEWAY,
+        message: 'Invalid Name',
+        data: {
+          id: 'someId',
+          name: '',
+          ...product,
+        },
+      };
+
+      jest
+        .spyOn(productsService, 'createProduct')
+        .mockImplementationOnce(() => Promise.resolve(result));
+      expect(await productsController.createProduct(product)).toBe(result);
+    });
+    it('then should get an error messages when user wants to create a product and price is null or not a number', async () => {
+      const result: CreateProductResponseDto = {
+        status: HttpStatus.BAD_GATEWAY,
+        message: 'Invalid Price',
+        data: {
+          id: 'someId',
+          price: 'someprice',
+          ...product,
+        },
+      };
+
+      jest
+        .spyOn(productsService, 'createProduct')
+        .mockImplementationOnce(() => Promise.resolve(result));
+      expect(await productsController.createProduct(product)).toBe(result);
+    });
+
+    it('then should get an error messages when user wants to create a product and category is invalid', async () => {
+      const result: CreateProductResponseDto = {
+        status: HttpStatus.BAD_GATEWAY,
+        message: 'Invalid Category',
+        data: {
+          id: 'someId',
+          category: '',
+          ...product,
+        },
+      };
+
+      jest
+        .spyOn(productsService, 'createProduct')
+        .mockImplementationOnce(() => Promise.resolve(result));
+      expect(await productsController.createProduct(product)).toBe(result);
+    });
     it('then user should get a success message and all products when performing get all products', async () => {
       const result: GetAllProductsResponseDto = {
         status: HttpStatus.OK,
@@ -82,11 +129,7 @@ describe('Products Controller', () => {
             images: ['image1', 'image2'],
             id: '84bae457-616a-4562-8d8a-7829984608d7',
             price: 22,
-            category: {
-              name: 'category 1',
-              image: 'image1',
-              description: '',
-            },
+            category: 'ea5e2360-39c8-4f7a-b2e1-3d7108bcba41',
           },
         ],
         count: 1,
@@ -108,11 +151,7 @@ describe('Products Controller', () => {
             images: ['image1', 'image2'],
             id: '84bae457-616a-4562-8d8a-7829984608d7',
             price: 22.22,
-            category: {
-              name: 'category 1',
-              image: 'image1',
-              description: '',
-            },
+            category: 'ea5e2360-39c8-4f7a-b2e1-3d7108bcba41',
           },
         ],
         count: 1,
@@ -147,6 +186,7 @@ describe('Products Controller', () => {
             images: ['src', 'src'],
             description: 'variable2',
             name: 'new aaaa',
+            updatedDate: 'some date',
           },
         ),
       ).toBe(result);

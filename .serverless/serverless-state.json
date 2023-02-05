@@ -206,7 +206,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/nestjs-serverless-dynamo/dev/1675456743940-2023-02-03T20:39:03.940Z/nestjs-serverless-dynamo.zip"
+                "S3Key": "serverless/nestjs-serverless-dynamo/dev/1675630583652-2023-02-05T20:56:23.652Z/nestjs-serverless-dynamo.zip"
               },
               "Handler": "_optimize/nestjs-serverless-dynamo-dev-app/dist/serverless.handler",
               "Runtime": "nodejs14.x",
@@ -231,14 +231,14 @@
               "AppLogGroup"
             ]
           },
-          "AppLambdaVersionuwjIw9obHcDVrTIMVezHqxeIPX9CCrQHJ0K7t09avYo": {
+          "AppLambdaVersioniF1KLHddWdQpKqY21ijCVgNjsK0qbOODVOekeq1U9vA": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "O3UEptWhTVEimeHr3CbQuW5kePqu6Q1LbNJKGGkedoQ="
+              "CodeSha256": "voUiqOgLphiCS+WQjlwq9KWu5NdoB+kErl3uqgROAq8="
             }
           },
           "ApiGatewayRestApi": {
@@ -363,7 +363,7 @@
               "AppLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1675456721512": {
+          "ApiGatewayDeployment1675630563631": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -470,7 +470,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionuwjIw9obHcDVrTIMVezHqxeIPX9CCrQHJ0K7t09avYo"
+              "Ref": "AppLambdaVersioniF1KLHddWdQpKqY21ijCVgNjsK0qbOODVOekeq1U9vA"
             },
             "Export": {
               "Name": "sls-nestjs-serverless-dynamo-dev-AppLambdaFunctionQualifiedArn"
@@ -649,7 +649,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersionuwjIw9obHcDVrTIMVezHqxeIPX9CCrQHJ0K7t09avYo"
+        "versionLogicalId": "AppLambdaVersioniF1KLHddWdQpKqY21ijCVgNjsK0qbOODVOekeq1U9vA"
       }
     },
     "resources": {
@@ -726,7 +726,7 @@
     "artifact": "/Users/juancarlospacheco/projects/products-category-no-sql-lambda/products-category-aws-no-sql/.serverless/nestjs-serverless-dynamo.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/nestjs-serverless-dynamo/dev/1675456743940-2023-02-03T20:39:03.940Z",
+    "artifactDirectoryName": "serverless/nestjs-serverless-dynamo/dev/1675630583652-2023-02-05T20:56:23.652Z",
     "artifact": "nestjs-serverless-dynamo.zip"
   }
 }
